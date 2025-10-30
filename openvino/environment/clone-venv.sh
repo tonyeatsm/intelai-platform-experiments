@@ -39,16 +39,20 @@ echo "📦 正在从 $OLD_VENV 克隆到 $NEW_VENV ..."
 echo "1️⃣ 导出依赖包列表..."
 "$OLD_VENV/bin/python" -m pip freeze > /tmp/venv-requirements.txt
 
+# 生成清洗后的依赖（仅保留 标准固定版本 的条目，过滤本地路径/VCS/可编辑安装）
+echo "1️⃣.1️⃣ 清洗依赖列表（移除本地路径与可编辑安装）..."
+awk '/^[A-Za-z0-9_.-]+==[A-Za-z0-9_.+-]+$/ {print}' /tmp/venv-requirements.txt > /tmp/venv-requirements-sanitized.txt
+
 # 创建新环境
 echo "2️⃣ 创建新的虚拟环境..."
 python3 -m venv "$NEW_VENV"
 
 # 安装依赖
 echo "3️⃣ 安装依赖包..."
-"$NEW_VENV/bin/python" -m pip install -r /tmp/venv-requirements.txt
+"$NEW_VENV/bin/python" -m pip install -r /tmp/venv-requirements-sanitized.txt -i https://mirrors.aliyun.com/pypi/simple
 
 # 清理临时文件
-rm -f /tmp/venv-requirements.txt
+rm -f /tmp/venv-requirements.txt /tmp/venv-requirements-sanitized.txt
 
 echo "✅ 虚拟环境克隆成功！"
 echo "👉 激活新环境: source $NEW_VENV/bin/activate"
