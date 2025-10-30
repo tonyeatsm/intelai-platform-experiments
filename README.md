@@ -1,83 +1,140 @@
 # Intel AI Platform Experiments
 
-Personal experiments with the Intel AI software stack: OpenVINO, IPEX-LLM, DL Streamer, and oneAPI. This repo contains demos, notes, and utilities for optimizing AI workloads (LLMs, CV, real-time video) on Intel CPUs/GPUs/accelerators.
+## Project Background
+Personal experiments utilizing the Intel AI software stack, aiming to demonstrate and optimize AI workload deployment (LLMs, CV, real-time video analytics) on Intel CPUs, GPUs, and accelerators.
 
-- 中文版请见: [README.zh-CN.md](./README.zh-CN.md)
+## Features
+- End-to-end AI workload demos (CV, LLM, streaming)
+- Performance optimization scripts for Intel hardware
+- Utilities for environment setup and device verification
+- Containerized OpenVINO workflows
+- Reproducible Python virtualenv management
 
 ## Tech Stack
-
-- [OpenVINO](https://docs.openvino.ai/) – high-performance inference toolkit
-- [IPEX-LLM](https://github.com/intel-analytics/ipex-llm) – LLM acceleration on Intel platforms
-- [DL Streamer](https://github.com/dlstreamer/dlstreamer) – real-time AI video pipelines
-- [oneAPI](https://www.oneapi.com/) – cross-architecture programming model
+- [OpenVINO](https://docs.openvino.ai/) – High-performance inference toolkit
+- [IPEX-LLM](https://github.com/intel-analytics/ipex-llm) – LLM acceleration for Intel CPUs/GPUs
+- [DL Streamer](https://github.com/dlstreamer/dlstreamer) – Real-time AI video pipeline framework
+- [oneAPI](https://www.oneapi.com/) – Cross-architecture programming model
 
 ## Repository Layout
-
-```
+```text
 openvino/
-  environment/           # Docker env notes for OpenVINO development
+  environment/           # OpenVINO Docker environment notes
   sources/
-    device/              # Device verification utilities
-      verify_device.py   # Lists available devices and full device names via OpenVINO
-      README.md          # Quick run instructions for virtualenv
+    device/              # Device verification scripts
+      verify_device.py
+      README.md          # How to use venv for quick runs
     venv/
-      clone-venv.sh      # Script to clone a Python venv by re-creating it
-README.md                # English README (this file)
+      clone-venv.sh      # Clone Python venv script
+README.md                # English README
 README.zh-CN.md          # Chinese README
 ```
 
-## Quickstart
+## Project Contents
 
-1) Clone the repository
+### openvino/environment/
+- Docker environment setup scripts and notes
+- Scripts for cloning Python virtualenvs
+- Example Docker commands for container creation, management, and committing images
+- Instructions for installing PyTorch XPU and other dependencies
+
+### openvino/sources/benchmark_app/
+- Provides an end-to-end example for benchmarking model inference on Intel hardware using OpenVINO.
+- **Core workflow:**
+  1. Download YOLO11n PyTorch model (`yolo11n.pt`).
+  2. Convert to OpenVINO IR format using `convert_model.py` (automatic conversion).
+  3. Run hardware device discovery (`verify_device.py`).
+  4. Benchmark with OpenVINO's `benchmark_app` tool for both throughput and latency modes.
+- **Example commands:**
 ```bash
-git clone https://github.com/tonyeatsm/intel-ai-labs.git
-cd intel-ai-labs
+# In Docker
+source /opt/benchmark-app_venv/bin/activate
+mkdir -p /root/openvino/sources/benchmark_app/models
+cd /root/openvino/sources/benchmark_app/models
+wget https://github.com/ultralytics/assets/releases/download/v8.3.0/yolo11n.pt
+python /root/openvino/sources/benchmark_app/convert_model.py
+python /root/openvino/sources/device/verify_device.py
+benchmark_app \
+  -m /root/openvino/sources/benchmark_app/models/yolo11n_openvino_model/yolo11n.xml \
+  -shape "x[1,3,640,640]" \
+  -hint throughput \
+  -d CPU # or GPU.0 GPU.1
 ```
+- **Performance output examples:**
+  - Throughput mode (FPS):
+    - CPU: 89.70 FPS
+    - GPU.0: 173.76 FPS
+    - GPU.1: 1110.84 FPS
+  - Latency mode:
+    - CPU: 2.39 ms, 410.42 FPS
+    - GPU.0: 2.05 ms, 478.70 FPS
+    - GPU.1: 2.37 ms, 412.69 FPS
+- **Scripts:**
+  - `convert_model.py`: Exports YOLO model to OpenVINO IR, with auto dynamic/half precision.
+  - `models/metadata.yaml`: Class list and model info matching COCO detection dataset.
 
-2) (Option A) Use Docker for OpenVINO development
+### openvino/sources/device/
+- Device discovery utilities for listing available Intel AI hardware accelerators
+- Helps validate hardware and environment support for deployed workloads
 
-The OpenVINO environment notes live in `openvino/environment/README.md`. Typical flow:
+## Quickstart
+1. Clone the repository
 ```bash
-# Pull the developer image (example version)
+git clone https://github.com/tonyeatsm/intelai-platform-experiments.git
+cd intelai-platform-experiments
+```
+2. (Option A) Use Docker for OpenVINO workflows
+   - See: `openvino/environment/README.md`
+   - Example usage:
+```bash
 sudo docker pull openvino/ubuntu24_dev:2025.3.0
-
-# Create/start a container (adjust local mount paths as needed)
 sudo docker run -itd \
   --restart always \
-  --name intel-ai-labs_openvino \
+  --name intelai-platform-experiments_openvino \
   --user root \
   --device /dev/dri:/dev/dri \
   -v /etc/localtime:/etc/localtime \
   --ipc=host \
   -p 6700:6700 \
-  -v /data/intel/intel-ai-labs/openvino:/root/openvino \
+  -v /data/intel/intelai-platform-experiments/openvino:/root/openvino \
   -w /root/openvino openvino/ubuntu24_dev:2025.3.0
-
-sudo docker start intel-ai-labs_openvino
-sudo docker exec -it intel-ai-labs_openvino /bin/bash
+sudo docker start intelai-platform-experiments_openvino
+sudo docker exec -it intelai-platform-experiments_openvino /bin/bash
 ```
-
-3) (Option B) Use a local Python virtualenv
-
-If you already have a configured venv you want to replicate, `openvino/sources/venv/clone-venv.sh` can recreate it elsewhere by exporting and re-installing dependencies:
+3. (Option B) Use local Python virtualenv
+   - To clone an existing venv:
 ```bash
 bash openvino/sources/venv/clone-venv.sh /opt/venv /opt/my_new_env
 source /opt/my_new_env/bin/activate
 ```
 
-## Verify Intel Devices with OpenVINO
-
-Use the `verify_device.py` utility to list available devices and their full names:
+## Usage Examples
+- **Device Verification:**
 ```bash
 python openvino/sources/device/verify_device.py
 ```
-Expected output resembles:
-```
-['CPU', 'GPU', ...]
-['Intel(R) ... CPU ...', 'Intel(R) ... GPU ...', ...]
-```
+- **Model Conversion & Benchmarking**
+  See scripts in `openvino/sources/benchmark_app/`
+  (add your models under `models/` subdir)
 
-## Notes
+## Contributing Guide
+Contributions are welcome! To propose a change:
+1. Fork the repo & submit a PR
+2. Open issues for bugs or suggestions
+3. Please keep code/comment style consistent and document new scripts/utilities
 
-- The Docker commands and image tags in `openvino/environment/README.md` are examples; adjust versions and paths for your environment.
-- For OpenVINO installation and device support details, refer to the official docs linked above.
+## FAQ
+**Q:** Which Intel hardware is supported?  
+**A:** The scripts are tested on modern Intel CPUs, GPUs, and accelerators supported by OpenVINO and oneAPI.
+
+**Q:** Can I run LLM models on Intel GPU?  
+**A:** Yes, via IPEX-LLM and OpenVINO. See their docs for up-to-date compatibility.
+
+## Support & Contact
+- [OpenVINO Documentation](https://docs.openvino.ai/)
+- [Open an Issue](https://github.com/tonyeatsm/intelai-platform-experiments/issues) for project-specific help
+- Email: youremail@example.com
+
+## Acknowledgements
+- Intel (for OpenVINO, oneAPI, and AI tools)
+- All open-source contributors
