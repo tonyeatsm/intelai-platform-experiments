@@ -59,8 +59,7 @@ source /opt/benchmark-app_venv/bin/activate
 # 安装Pytorch XPU版, 支持AI训练
 pip install --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/xpu
 pip install numpy==1.26.4 -i https://mirrors.aliyun.com/pypi/simple
-
-
+pip install ultralytics==8.3.222 -i https://mirrors.aliyun.com/pypi/simple
 
 
 ```

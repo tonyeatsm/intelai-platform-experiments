@@ -1,3 +1,13 @@
+
+# Doc
+```shell
+
+# 在家造AI神器！OpenVINO™让桌面推理触手可及
+https://inteldevzone.blog.csdn.net/article/details/148951180
+
+
+```
+
 # Run
 ```shell
 
@@ -24,6 +34,7 @@ benchmark_app \
 -m /root/openvino/sources/benchmark_app/models/yolo11n_openvino_model/yolo11n.xml \
 -shape "x[1,3,640,640]" \
 -hint throughput \
+-t 600 \
 -d CPU #GPU.0 GPU.1
 
 [ INFO ] Execution Devices:['CPU']
@@ -62,6 +73,7 @@ benchmark_app \
 -m /root/openvino/sources/benchmark_app/models/yolo11n_openvino_model/yolo11n.xml \
 -shape "x[1,3,640,640]" \
 -hint latency \
+-t 600 \
 -d CPU #GPU.0 GPU.1
 
 [ INFO ] Execution Devices:['CPU']
