@@ -42,7 +42,7 @@ unzip train2017.zip
 unzip val2017.zip
 unzip test2017.zip
 cd /root/openvino/sources/xpu_training/yolo/datasets/coco2017
-wget -c https://ultralytics.com/assets/coco2017labels.zip
+wget -c https://github.com/ultralytics/assets/releases/download/v0.0.0/coco2017labels.zip
 unzip coco2017labels.zip
 
 # Download coco.yaml and update
@@ -75,18 +75,21 @@ elif self.device.type == "xpu": # 新增: 支持XPU
     
 
 # training
+cd /root/openvino/sources/xpu_training/yolo
+rm -rf runs/
+
 RUNS_PATH=/root/openvino/sources/xpu_training/yolo/runs
 PROJECT_NAME=yolo11n-intel_coco2017
 mkdir -p ${RUNS_PATH}
-yolo train \
+nohup yolo train \
 data=/root/openvino/sources/xpu_training/yolo/cfg/coco.yaml \
 model=/root/openvino/sources/xpu_training/yolo/models/yolo11n.pt \
 epochs=10 \
 lr0=0.01 \
 device=intel \
 amp=False \
-workers=2 \
-batch=48 \
+workers=4 \
+batch=32 \
 project=${RUNS_PATH} \
 name=${PROJECT_NAME} > ${RUNS_PATH}/${PROJECT_NAME}_training.log &
 
