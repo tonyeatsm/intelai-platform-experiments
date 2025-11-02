@@ -60,11 +60,11 @@ test: test-dev2017.txt # 20288 of 40670 images, submit to https://competitions.c
 # 修改ultralytics代码，支持XPU
 ultralytics/utils/torch_utils.py
 定位到select_device()
-if isinstance(device, torch.device) or str(device).startswith(("tpu", "intel")):
-    if str(device).startswith("intel"): # 新增：支持XPU设备
+if isinstance(device, torch.device) or str(device).startswith(("tpu", "intel", "xpu")):
+    # 新增：支持XPU设备
+    if str(device).startswith("intel") or str(device).startswith("xpu"):
         return torch.device('xpu')
-
-ultralytics/engine/trainer.py
+    return device
 
 定位到_get_memory()
 elif self.device.type == "xpu": # 新增: 支持XPU
@@ -84,9 +84,9 @@ mkdir -p ${RUNS_PATH}
 nohup yolo train \
 data=/root/openvino/sources/xpu_training/yolo/cfg/coco.yaml \
 model=/root/openvino/sources/xpu_training/yolo/models/yolo11n.pt \
-epochs=10 \
+epochs=1 \
 lr0=0.01 \
-device=intel \
+device=xpu \
 amp=False \
 workers=4 \
 batch=32 \
