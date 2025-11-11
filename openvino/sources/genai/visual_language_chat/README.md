@@ -50,14 +50,14 @@ cd /opt/install/openvino.genai-2025.3.0.0/samples/python/visual_language_chat
 python visual_language_chat.py \
 /root/openvino/sources/genai/visual_language_chat/models/MiniCPM-V-2_6_IR/ \
 /root/openvino/sources/genai/visual_language_chat/6ff1643f00a6b1a63f343a08300d557f.jpg \
-GPU
+GPU:1
 
 # run MiniCPM-V-4_5_IR
 cd /opt/install/openvino.genai-2025.3.0.0/samples/python/visual_language_chat
 python visual_language_chat.py \
 /root/openvino/sources/genai/visual_language_chat/models/MiniCPM-V-4_5_IR/ \
 /root/openvino/sources/genai/visual_language_chat/6ff1643f00a6b1a63f343a08300d557f.jpg \
-GPU
+GPU:1
 
 ```
 
@@ -70,23 +70,9 @@ python benchmark_vlm.py \
 -i /root/openvino/sources/genai/visual_language_chat/6ff1643f00a6b1a63f343a08300d557f.jpg \
 -p "图中有什么?" \
 -n 3 \
--d GPU
+-d GPU:1 # GPU:0(iGPU), GPU:1(Arc770)
 
-
-## CPU 性能
-openvino runtime version: 2025.3.0-19807-44526285f24-releases/2025/3
-Number of images:1, Prompt token size: 4
-Output token size: 20
-Load time: 3799.00 ms
-Generate time: 22453.30 ± 11.31 ms
-Tokenization time: 1.56 ± 0.01 ms
-Detokenization time: 0.22 ± 0.01 ms
-Embeddings preparation time: 4.13 ± 0.00 ms
-TTFT: 20124.31 ± 8.00 ms
-TPOT: 122.56 ± 2.66 ms
-Throughput : 8.16 ± 0.18 tokens/s
-
-## GPU 性能 
+## iGPU 性能
 openvino runtime version: 2025.3.0-19807-44526285f24-releases/2025/3
 Number of images:1, Prompt token size: 4
 Load time: 15636.00 ms
@@ -98,6 +84,18 @@ TTFT: 7918.96 ± 13.56 ms
 TPOT: 108.79 ± 1.61 ms
 Throughput : 9.19 ± 0.14 tokens/s
 
+## Arc770 性能 
+openvino runtime version: 2025.3.0-19807-44526285f24-releases/2025/3
+Number of images:1, Prompt token size: 4
+Output token size: 20
+Load time: 10528.00 ms
+Generate time: 1301.39 ± 4.18 ms
+Tokenization time: 3.10 ± 0.33 ms
+Detokenization time: 1.01 ± 0.03 ms
+Embeddings preparation time: 5.77 ± 0.00 ms
+TTFT: 676.50 ± 6.50 ms
+TPOT: 32.82 ± 1.75 ms
+Throughput : 30.47 ± 1.63 tokens/s
 
 # benchmark MiniCPM-V-4_5_IR
 cd /opt/install/openvino.genai-2025.3.0.0/samples/python/visual_language_chat
@@ -106,9 +104,9 @@ python benchmark_vlm.py \
 -i /root/openvino/sources/genai/visual_language_chat/6ff1643f00a6b1a63f343a08300d557f.jpg \
 -p "图中有什么?" \
 -n 3 \
--d GPU
+-d GPU:1 # GPU:0(iGPU), GPU:1(Arc770)
 
-## GPU 性能
+## iGPU 性能
 openvino runtime version: 2025.3.0-19807-44526285f24-releases/2025/3
 Number of images:1, Prompt token size: 4
 Output token size: 20
@@ -120,5 +118,18 @@ Embeddings preparation time: 24.96 ± 0.00 ms
 TTFT: 7740.11 ± 11.14 ms
 TPOT: 116.84 ± 1.50 ms
 Throughput : 8.56 ± 0.11 tokens/s
+
+## Arc770 性能 
+openvino runtime version: 2025.3.0-19807-44526285f24-releases/2025/3
+Number of images:1, Prompt token size: 4
+Output token size: 20
+Load time: 16892.00 ms
+Generate time: 1393.61 ± 10.45 ms
+Tokenization time: 26.10 ± 0.37 ms
+Detokenization time: 0.76 ± 0.08 ms
+Embeddings preparation time: 29.16 ± 0.00 ms
+TTFT: 719.50 ± 3.93 ms
+TPOT: 35.43 ± 2.06 ms
+Throughput : 28.23 ± 1.64 tokens/s
 
 ```
