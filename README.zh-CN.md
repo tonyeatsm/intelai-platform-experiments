@@ -1,5 +1,7 @@
 # Intel AI 平台实验集
 
+[English](README.md)
+
 基于 Intel AI 软件栈的工程化实验，聚焦在 Intel CPU/GPU 上高效部署与优化 AI 负载（计算机视觉、LLM、实时视频分析）。
 
 ## 主要特性
@@ -7,6 +9,7 @@
 - 枚举/检测本机 Intel AI 设备
 - Docker 环境与可复用 Python venv 克隆脚本
 - 可选：在 Intel GPU 上进行 YOLO 训练（PyTorch XPU）
+- 可选：基于 OpenVINO GenAI 的多模态对话（visual-language-chat）
 
 ## 技术栈
 - OpenVINO: https://docs.openvino.ai/
@@ -28,6 +31,9 @@ openvino/
     device/              # 设备检测
       verify_device.py
       README.md
+    genai/
+      visual_language_chat/  # 基于 openvino.genai 的 VLM 示例
+        README.md
     xpu_training/        # （可选）基于 Intel GPU 的 YOLO 训练
       yolo/
         README.md
@@ -44,6 +50,7 @@ cd intelai-platform-experiments
 
 2）启动 Docker 环境（推荐）。详细说明见 `openvino/environment/README.md`。
 ```bash
+# Official OpenVINO 开发镜像
 sudo docker pull openvino/ubuntu24_dev:2025.3.0
 sudo docker run -itd \
   --restart always \
@@ -55,6 +62,20 @@ sudo docker run -itd \
   -p 6700:6700 \
   -v /data/intel-workspace/intelai-platform-experiments/openvino:/root/openvino \
   -w /root/openvino openvino/ubuntu24_dev:2025.3.0
+
+# 或使用预构建的环境镜像（可选）
+sudo docker pull tonyeatsm/intelai-platform-experiments_openvino:20251030
+sudo docker run -itd \
+  --restart always \
+  --name intelai-platform-experiments_openvino \
+  --user root \
+  --device /dev/dri:/dev/dri \
+  -v /etc/localtime:/etc/localtime \
+  --ipc=host \
+  -p 6700:6700 \
+  -v /data/intel-workspace/intelai-platform-experiments/openvino:/root/openvino \
+  -w /root/openvino tonyeatsm/intelai-platform-experiments_openvino:20251030
+
 sudo docker start intelai-platform-experiments_openvino
 sudo docker exec -it intelai-platform-experiments_openvino /bin/bash
 ```
@@ -115,6 +136,13 @@ python /root/openvino/sources/device/verify_device.py
 - 下载 COCO 2017 数据集与标签
 - 对 Ultralytics 进行最小化修改以支持 `device=intel`
 - 运行 `yolo train` 与 `yolo val`
+
+## （可选）GenAI 视觉-语言对话（MiniCPM-V）
+见 `openvino/sources/genai/visual_language_chat/README.md`：
+- 通过 `modelscope` 下载模型
+- 使用 `optimum-cli export openvino` 导出（image-text-to-text）
+- 运行 `visual_language_chat.py`（CPU/GPU）
+- 使用 `benchmark_vlm.py` 进行性能评测
 
 ## 贡献
 欢迎提交 PR 与 Issue。请为新增脚本补充最小可用说明，并保持风格一致。

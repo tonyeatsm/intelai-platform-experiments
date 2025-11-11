@@ -1,18 +1,21 @@
 # Intel AI Platform Experiments
 
-Experiments and practical workflows using Intel's AI software stack to deploy and optimize AI workloads (CV, LLMs, real-time analytics) on Intel CPUs and GPUs.
+[中文说明 (Chinese)](README.zh-CN.md)
+
+Experiments and practical workflows using Intel's AI software stack to deploy and optimize AI workloads (CV, LLMs/VLMs, real-time analytics) on Intel CPUs and GPUs.
 
 ## Features
-- OpenVINO inference benchmarking with YOLO11n (throughput/latency)
+- OpenVINO benchmarking for YOLO11n (throughput/latency)
 - Device discovery for Intel AI hardware
 - Dockerized environment and reusable Python venv cloning
 - Optional YOLO training on Intel GPUs (PyTorch XPU)
+- Optional GenAI visual-language-chat with OpenVINO GenAI
 
 ## Tech Stack
-- [OpenVINO](https://docs.openvino.ai/)
-- [PyTorch XPU (Intel GPU)](https://download.pytorch.org/whl/nightly/xpu)
-- [Ultralytics YOLO](https://github.com/ultralytics/ultralytics)
-- [oneAPI/SYCL](https://www.oneapi.com/)
+- OpenVINO: https://docs.openvino.ai/
+- PyTorch XPU (Intel GPU): https://download.pytorch.org/whl/nightly/xpu
+- Ultralytics YOLO: https://github.com/ultralytics/ultralytics
+- oneAPI/SYCL: https://www.oneapi.com/
 
 ## Repository Layout
 ```text
@@ -21,13 +24,16 @@ openvino/
     clone-venv.sh
     README.md
   sources/
-    benchmark_app/       # OpenVINO model convert + benchmark flow
+    benchmark_app/       # OpenVINO model convert + benchmark flow (YOLO11n)
       convert_model.py
       models/
       README.md
     device/              # Device discovery
       verify_device.py
       README.md
+    genai/
+      visual_language_chat/  # VLM sample using openvino.genai
+        README.md
     xpu_training/        # YOLO training on Intel GPU (optional)
       yolo/
         README.md
@@ -44,6 +50,7 @@ cd intelai-platform-experiments
 
 2) Start Docker environment (recommended). See `openvino/environment/README.md` for details.
 ```bash
+# Official OpenVINO dev image
 sudo docker pull openvino/ubuntu24_dev:2025.3.0
 sudo docker run -itd \
   --restart always \
@@ -55,6 +62,20 @@ sudo docker run -itd \
   -p 6700:6700 \
   -v /data/intel-workspace/intelai-platform-experiments/openvino:/root/openvino \
   -w /root/openvino openvino/ubuntu24_dev:2025.3.0
+
+# Or use the prebuilt environment image (optional)
+sudo docker pull tonyeatsm/intelai-platform-experiments_openvino:20251030
+sudo docker run -itd \
+  --restart always \
+  --name intelai-platform-experiments_openvino \
+  --user root \
+  --device /dev/dri:/dev/dri \
+  -v /etc/localtime:/etc/localtime \
+  --ipc=host \
+  -p 6700:6700 \
+  -v /data/intel-workspace/intelai-platform-experiments/openvino:/root/openvino \
+  -w /root/openvino tonyeatsm/intelai-platform-experiments_openvino:20251030
+
 sudo docker start intelai-platform-experiments_openvino
 sudo docker exec -it intelai-platform-experiments_openvino /bin/bash
 ```
@@ -74,7 +95,7 @@ mkdir -p /root/openvino/sources/benchmark_app/models
 cd /root/openvino/sources/benchmark_app/models
 wget https://github.com/ultralytics/assets/releases/download/v8.3.0/yolo11n.pt
 
-# Convert to OpenVINO IR (dynamic, half precision)
+# Convert to OpenVINO IR (dynamic shape, half precision)
 python /root/openvino/sources/benchmark_app/convert_model.py
 
 # Discover devices
@@ -113,11 +134,18 @@ python /root/openvino/sources/device/verify_device.py
 See `openvino/sources/xpu_training/yolo/README.md` for end-to-end steps, including:
 - Verifying PyTorch XPU is available
 - Downloading COCO 2017 dataset and labels
-- Minor Ultralytics code changes to support `device=intel`
+- Minimal Ultralytics changes to support XPU/intel device
 - Running `yolo train` and `yolo val`
 
+## Optional: GenAI Visual-Language Chat (MiniCPM-V)
+See `openvino/sources/genai/visual_language_chat/README.md` for:
+- Downloading models via `modelscope`
+- Exporting models with `optimum-cli export openvino` (image-text-to-text)
+- Running `visual_language_chat.py` with CPU/GPU
+- Benchmarking with `benchmark_vlm.py`
+
 ## Contributing
-PRs and issues are welcome. Please document any new scripts and keep styles consistent.
+PRs and issues are welcome. Please document new scripts and keep styles consistent.
 
 ## License
 This repository primarily contains glue scripts and instructions referencing upstream projects. Check upstream licenses for their respective components.
