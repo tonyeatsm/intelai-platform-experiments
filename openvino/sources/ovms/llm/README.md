@@ -113,7 +113,7 @@ python /opt/vllm/benchmarks/benchmark_serving.py \
 --hf-split train \
 --host 172.17.0.1 \
 --port 8000 \
---model MiniCPM-V-4_5-fp16_ov \
+--model MiniCPM-V-4_5-int4_ov \
 --tokenizer /root/openvino/sources/genai/visual_language_chat/models/MiniCPM-V-4_5-int4_ov \
 --endpoint /v3/chat/completions \
 --max-concurrency 1 \
