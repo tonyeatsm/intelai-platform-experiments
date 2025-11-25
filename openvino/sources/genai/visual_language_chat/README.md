@@ -1,7 +1,9 @@
 # Doc
 ```shell
 
-https://github.com/openvinotoolkit/openvino.genai/tree/master/samples/python/genai/visual_language_chat
+https://github.com/openvinotoolkit/openvino.genai/tree/master/samples/python/visual_language_chat
+
+https://github.com/openvinotoolkit/openvino.genai/tree/master
 
 ```
 
@@ -27,7 +29,7 @@ optimum-cli export openvino \
 --task image-text-to-text \
 --weight-format fp16 \
 --trust-remote-code \
-/root/openvino/sources/genai/visual_language_chat/models/MiniCPM-V-4_5-fp16_OV
+/root/openvino/sources/genai/visual_language_chat/models/MiniCPM-V-4_5-fp16_ov
 
 
 # export MiniCPM-V-4_5-int8
@@ -37,7 +39,7 @@ optimum-cli export openvino \
 --weight-format int8 \
 --quant-mode int8 \
 --trust-remote-code \
-/root/openvino/sources/genai/visual_language_chat/models/MiniCPM-V-4_5-int8_OV
+/root/openvino/sources/genai/visual_language_chat/models/MiniCPM-V-4_5-int8_ov
 
 
 # export MiniCPM-V-4_5-int4
@@ -47,13 +49,15 @@ optimum-cli export openvino \
 --weight-format int4 \
 --quant-mode int4_f8e5m2 \
 --trust-remote-code \
-/root/openvino/sources/genai/visual_language_chat/models/MiniCPM-V-4_5-int4_OV
+/root/openvino/sources/genai/visual_language_chat/models/MiniCPM-V-4_5-int4_ov
 
 
 ```
 
 # Run 
-```shell visual_language_chat_fixed
+```shell 
+
+# visual_language_chat_fixed
 
 sudo docker exec -it intelai-platform-experiments_openvino /bin/bash
 source /opt/genai_venv/bin/activate  
@@ -61,27 +65,27 @@ source /opt/genai_venv/bin/activate
 # copy visual_language_chat_fixed.py to /opt...
 sudo docker cp ./visual_language_chat_fixed.py intelai-platform-experiments_openvino:/opt/install/openvino.genai-2025.3.0.0/samples/python/visual_language_chat/
 
-# run MiniCPM-V-4_5-fp16_OV
+# run MiniCPM-V-4_5-fp16_ov
 cd /opt/install/openvino.genai-2025.3.0.0/samples/python/visual_language_chat
 python visual_language_chat_fixed.py \
-/root/openvino/sources/genai/visual_language_chat/models/MiniCPM-V-4_5-fp16_OV/ \
+/root/openvino/sources/genai/visual_language_chat/models/MiniCPM-V-4_5-fp16_ov/ \
 /root/openvino/sources/genai/visual_language_chat/6ff1643f00a6b1a63f343a08300d557f.jpg \
 GPU:1 \
 --max-tokens 512
 
-# run MiniCPM-V-4_5-int8_OV
+# run MiniCPM-V-4_5-int8_ov
 cd /opt/install/openvino.genai-2025.3.0.0/samples/python/visual_language_chat
 python visual_language_chat_fixed.py \
-/root/openvino/sources/genai/visual_language_chat/models/MiniCPM-V-4_5-int8_OV/ \
+/root/openvino/sources/genai/visual_language_chat/models/MiniCPM-V-4_5-int8_ov/ \
 /root/openvino/sources/genai/visual_language_chat/6ff1643f00a6b1a63f343a08300d557f.jpg \
 GPU:1 \
 --max-tokens 512
 
 
-# run MiniCPM-V-4_5-int4_OV 
+# run MiniCPM-V-4_5-int4_ov 
 cd /opt/install/openvino.genai-2025.3.0.0/samples/python/visual_language_chat
 python visual_language_chat_fixed.py \
-/root/openvino/sources/genai/visual_language_chat/models/MiniCPM-V-4_5-int4_OV/ \
+/root/openvino/sources/genai/visual_language_chat/models/MiniCPM-V-4_5-int4_ov/ \
 /root/openvino/sources/genai/visual_language_chat/6ff1643f00a6b1a63f343a08300d557f.jpg \
 GPU:1 \
 --max-tokens 10000
@@ -92,16 +96,16 @@ GPU:1 \
 # Run benchmark
 ```shell
 
-# benchmark MiniCPM-V-4_5-fp16_OV 
+# benchmark MiniCPM-V-4_5-fp16_ov 
 cd /opt/install/openvino.genai-2025.3.0.0/samples/python/visual_language_chat
 python benchmark_vlm.py \
--m /root/openvino/sources/genai/visual_language_chat/models/MiniCPM-V-4_5-fp16_OV  \
+-m /root/openvino/sources/genai/visual_language_chat/models/MiniCPM-V-4_5-fp16_ov  \
 -i /root/openvino/sources/genai/visual_language_chat/6ff1643f00a6b1a63f343a08300d557f.jpg \
 -p "图中有什么?" \
 -n 3 \
 -d GPU:0 # GPU:0(iGPU), GPU:1(Arc770)
 
-## MiniCPM-V-4_5-fp16_OV iGPU 性能 (显存占用17.6G)
+## MiniCPM-V-4_5-fp16_ov iGPU 性能 (显存占用17.6G)
 openvino runtime version: 2025.3.0-19807-44526285f24-releases/2025/3
 Number of images:1, Prompt token size: 4
 Output token size: 20
@@ -114,7 +118,7 @@ TTFT: 6966.32 ± 15.75 ms
 TPOT: 211.80 ± 1.06 ms
 Throughput : 4.72 ± 0.02 tokens/s
 
-## MiniCPM-V-4_5-fp16_OV Arc770 性能 (显存占用18.2G)
+## MiniCPM-V-4_5-fp16_ov Arc770 性能 (显存占用18.2G)
 openvino runtime version: 2025.3.0-19807-44526285f24-releases/2025/3
 Number of images:1, Prompt token size: 4
 Output token size: 20
@@ -128,16 +132,16 @@ TPOT: 57.86 ± 0.95 ms
 Throughput : 17.28 ± 0.28 tokens/s
 
 
-# benchmark MiniCPM-V-4_5-int8_OV
+# benchmark MiniCPM-V-4_5-int8_ov
 cd /opt/install/openvino.genai-2025.3.0.0/samples/python/visual_language_chat
 python benchmark_vlm.py \
--m /root/openvino/sources/genai/visual_language_chat/models/MiniCPM-V-4_5-int8_OV  \
+-m /root/openvino/sources/genai/visual_language_chat/models/MiniCPM-V-4_5-int8_ov  \
 -i /root/openvino/sources/genai/visual_language_chat/6ff1643f00a6b1a63f343a08300d557f.jpg \
 -p "图中有什么?" \
 -n 3 \
 -d GPU:1 # GPU:0(iGPU), GPU:1(Arc770)
 
-## MiniCPM-V-4_5-int8_OV iGPU 性能 (显存占用9.1G)
+## MiniCPM-V-4_5-int8_ov iGPU 性能 (显存占用9.1G)
 openvino runtime version: 2025.3.0-19807-44526285f24-releases/2025/3
 Number of images:1, Prompt token size: 4
 Output token size: 20
@@ -150,7 +154,7 @@ TTFT: 7981.66 ± 3.46 ms
 TPOT: 114.19 ± 1.53 ms
 Throughput : 8.76 ± 0.12 tokens/s
 
-## MiniCPM-V-4_5-int8_OV Arc770 性能 (显存占用9.8G) 
+## MiniCPM-V-4_5-int8_ov Arc770 性能 (显存占用9.8G) 
 openvino runtime version: 2025.3.0-19807-44526285f24-releases/2025/3
 Number of images:1, Prompt token size: 4
 Output token size: 20
@@ -164,16 +168,16 @@ TPOT: 35.63 ± 2.19 ms
 Throughput : 28.07 ± 1.73 tokens/s
 
 
-# benchmark MiniCPM-V-4_5-int4_OV
+# benchmark MiniCPM-V-4_5-int4_ov
 cd /opt/install/openvino.genai-2025.3.0.0/samples/python/visual_language_chat
 python benchmark_vlm.py \
--m /root/openvino/sources/genai/visual_language_chat/models/MiniCPM-V-4_5-int4_OV  \
+-m /root/openvino/sources/genai/visual_language_chat/models/MiniCPM-V-4_5-int4_ov  \
 -i /root/openvino/sources/genai/visual_language_chat/6ff1643f00a6b1a63f343a08300d557f.jpg \
 -p "图中有什么?" \
 -n 3 \
 -d GPU:1 # GPU:0(iGPU), GPU:1(Arc770)
 
-## MiniCPM-V-4_5-int4_OV iGPU 性能 (显存占用6G) 
+## MiniCPM-V-4_5-int4_ov iGPU 性能 (显存占用6G) 
 openvino runtime version: 2025.3.0-19807-44526285f24-releases/2025/3
 Number of images:1, Prompt token size: 4
 Output token size: 20
@@ -186,7 +190,7 @@ TTFT: 6885.49 ± 6.00 ms
 TPOT: 69.46 ± 0.76 ms
 Throughput : 14.40 ± 0.16 tokens/s
 
-## MiniCPM-V-4_5-int4_OV Arc770 性能 (显存占用6.4G)  
+## MiniCPM-V-4_5-int4_ov Arc770 性能 (显存占用6.4G)  
 openvino runtime version: 2025.3.0-19807-44526285f24-releases/2025/3
 Number of images:1, Prompt token size: 4
 Output token size: 20

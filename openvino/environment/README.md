@@ -83,6 +83,28 @@ pip install ultralytics==8.3.222 -i https://mirrors.aliyun.com/pypi/simple
 
 ```
 
+# Create venv benchmark-serving_venv 
+```shell
+# 克隆 venv
+cd /root/openvino/environment
+bash clone-venv.sh /opt/venv /opt/benchmark-serving_venv
+
+# 激活 venv
+source /opt/benchmark-serving_venv/bin/activate  
+
+# 删除 venv
+deactivate
+rm -rf /opt/benchmark-serving_venv 
+
+# 安装Pytorch CPU版, 支持benchmark_serving测试VLLM
+cd /opt
+git clone --branch v0.7.3 --depth 1 https://github.com/vllm-project/vllm
+cd /opt/vllm
+pip3 install -r requirements-cpu.txt --extra-index-url https://download.pytorch.org/whl/cpu
+
+
+```
+
 # Create venv genai_venv
 ```shell
 # 克隆 venv
