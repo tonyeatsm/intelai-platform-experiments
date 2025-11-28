@@ -46,7 +46,7 @@ sudo docker run -itd \
 --ipc=host \
 -p 6700:6700 \
 -v /data/intel-workspace/intelai-platform-experiments/openvino:/root/openvino \
--w /root/openvino tonyeatsm/intelai-platform-experiments_openvino:20251030
+-w /root/openvino openvino/ubuntu24_dev:2025.3.0
 
 
 ```
@@ -77,8 +77,8 @@ rm -rf /opt/benchmark-app_venv
 
 # 安装Pytorch XPU版, 支持AI训练
 pip install --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/xpu
-pip install numpy==1.26.4 -i https://mirrors.aliyun.com/pypi/simple
 pip install ultralytics==8.3.222 -i https://mirrors.aliyun.com/pypi/simple
+pip install numpy==1.26.4 -i https://mirrors.aliyun.com/pypi/simple
 
 
 ```
@@ -139,7 +139,7 @@ pip install modelscope
 # Docker commit 
 ```shell
 
-sudo docker commit intelai-platform-experiments_openvino tonyeatsm/intelai-platform-experiments_openvino:20251030
+sudo docker commit intelai-platform-experiments_openvino tonyeatsm/intelai-platform-experiments_openvino:20251128
 sudo docker push tonyeatsm/intelai-platform-experiments_openvino:20251128
 
 

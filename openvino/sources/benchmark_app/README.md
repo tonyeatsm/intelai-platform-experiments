@@ -34,7 +34,7 @@ benchmark_app \
 -m /root/openvino/sources/benchmark_app/models/yolo11n_openvino_model/yolo11n.xml \
 -shape "x[1,3,640,640]" \
 -hint throughput \
--t 600 \
+-t 60 \
 -d CPU #GPU.0 GPU.1
 
 [ INFO ] Execution Devices:['CPU']
