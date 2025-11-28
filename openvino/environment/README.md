@@ -29,7 +29,7 @@ https://blog.csdn.net/weixin_66503964/article/details/149742810
 sudo docker pull openvino/ubuntu24_dev:2025.3.0
 
 # 完整环境镜像
-sudo docker pull tonyeatsm/intelai-platform-experiments_openvino:20251030
+sudo docker pull tonyeatsm/intelai-platform-experiments_openvino:20251128
 
 ```
 
@@ -140,7 +140,7 @@ pip install modelscope
 ```shell
 
 sudo docker commit intelai-platform-experiments_openvino tonyeatsm/intelai-platform-experiments_openvino:20251030
-sudo docker push tonyeatsm/intelai-platform-experiments_openvino:20251030
+sudo docker push tonyeatsm/intelai-platform-experiments_openvino:20251128
 
 
 ```
