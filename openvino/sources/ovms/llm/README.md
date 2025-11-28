@@ -32,7 +32,7 @@ sudo docker run -it --rm \
 --device /dev/dri/renderD129:/dev/dri/renderD129 \
 -p 8000:8000 \
 -v ${models_path}:/models:rw openvino/model_server:2025.3-gpu \
---source_model MiniCPM-V-4_5-int4_ov \
+--source_model MiniCPM-V-4_5-int8_ov \
 --pipeline_type VLM \
 --model_repository_path models \
 --task text_generation \
@@ -113,40 +113,39 @@ python /opt/vllm/benchmarks/benchmark_serving.py \
 --hf-split train \
 --host 172.17.0.1 \
 --port 8000 \
---model MiniCPM-V-4_5-int4_ov \
---tokenizer /root/openvino/sources/genai/visual_language_chat/models/MiniCPM-V-4_5-int4_ov \
+--model MiniCPM-V-4_5-int8_ov \
+--tokenizer /root/openvino/sources/genai/visual_language_chat/models/MiniCPM-V-4_5-int8_ov \
 --endpoint /v3/chat/completions \
 --max-concurrency 1 \
---num-prompts 5 \
+--num-prompts 100 \
 --trust-remote-code
 
 
 
 
-Model MiniCPM-V-4_5-fp16_ov
+Model MiniCPM-V-4_5-int8_ov
 Maximum request concurrency: 1
 ============ Serving Benchmark Result ============
-Successful requests:                     5         
-Benchmark duration (s):                  60.43     
-Total input tokens:                      81        
+Successful requests:                     100       
+Benchmark duration (s):                  465.08    
+Total input tokens:                      16589     
 Total generated tokens:                  0         
-Request throughput (req/s):              0.08      
+Request throughput (req/s):              0.22      
 Output token throughput (tok/s):         0.00      
-Total Token throughput (tok/s):          1.34      
+Total Token throughput (tok/s):          35.67     
 ---------------Time to First Token----------------
-Mean TTFT (ms):                          5502.86   
-Median TTFT (ms):                        5474.51   
-P99 TTFT (ms):                           5795.78   
+Mean TTFT (ms):                          629.12    
+Median TTFT (ms):                        597.71    
+P99 TTFT (ms):                           1233.51   
 -----Time per Output Token (excl. 1st token)------
 Mean TPOT (ms):                          0.00      
 Median TPOT (ms):                        0.00      
 P99 TPOT (ms):                           0.00      
 ---------------Inter-token Latency----------------
-Mean ITL (ms):                           60.16     
-Median ITL (ms):                         58.34     
-P99 ITL (ms):                            172.62    
+Mean ITL (ms):                           37.82     
+Median ITL (ms):                         36.37     
+P99 ITL (ms):                            108.71    
 ==================================================
-
 
 
 
