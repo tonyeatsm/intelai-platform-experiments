@@ -1,5 +1,5 @@
-
 # Doc
+
 ```shell
 
 # 在家造AI神器！OpenVINO™让桌面推理触手可及
@@ -24,6 +24,7 @@ https://blog.csdn.net/weixin_66503964/article/details/149742810
 ```
 
 # Docker pull
+
 ```shell
 # 基础镜像
 sudo docker pull openvino/ubuntu24_dev:2025.3.0
@@ -33,9 +34,9 @@ sudo docker pull tonyeatsm/intelai-platform-experiments_openvino:20251128
 
 ```
 
-
 # Docker create
-``` shell
+
+```shell
 
 sudo docker run -itd \
 --restart always \
@@ -51,18 +52,20 @@ sudo docker run -itd \
 
 ```
 
-# Docker enter  
+# Docker enter
+
 ```shell
 
 sudo docker start intelai-platform-experiments_openvino
 sudo docker exec -it intelai-platform-experiments_openvino /bin/bash
 
 apt update
-apt install -y wget
+apt install -y wget unzip
 
 ```
 
-# Create venv benchmark-app_venv 
+# Create venv benchmark-app_venv
+
 ```shell
 # 克隆 venv
 cd /root/openvino/environment
@@ -83,7 +86,8 @@ pip install numpy==1.26.4 -i https://mirrors.aliyun.com/pypi/simple
 
 ```
 
-# Create venv benchmark-serving_venv 
+# Create venv benchmark-serving_venv
+
 ```shell
 # 克隆 venv
 cd /root/openvino/environment
@@ -106,6 +110,7 @@ pip3 install -r requirements-cpu.txt --extra-index-url https://download.pytorch.
 ```
 
 # Create venv genai_venv
+
 ```shell
 # 克隆 venv
 cd /root/openvino/environment
@@ -135,8 +140,8 @@ pip install modelscope
 
 ```
 
+# Docker commit
 
-# Docker commit 
 ```shell
 
 sudo docker commit intelai-platform-experiments_openvino tonyeatsm/intelai-platform-experiments_openvino:20251128
