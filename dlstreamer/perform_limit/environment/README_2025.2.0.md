@@ -15,7 +15,7 @@ https://dlstreamer.github.io/get_started/tutorial.html
 
 ```shell
 
-sudo docker pull intel/dlstreamer:2025.1.2-ubuntu22
+sudo docker pull intel/dlstreamer:2025.2.0-ubuntu22
 
 
 ```
@@ -26,14 +26,13 @@ sudo docker pull intel/dlstreamer:2025.1.2-ubuntu22
 
 sudo docker run -itd \
 --restart always \
---name intelai-platform-experiments_dlstreamer-2025.1.2 \
+--name intelai-platform-experiments_dlstreamer-2025.2.0 \
 --user root \
 --device /dev/dri/renderD129:/dev/dri/renderD129 \
 -v /etc/localtime:/etc/localtime \
---cap-add=SYS_NICE \
 --ipc=host \
 -v /data/intel-workspace/intelai-platform-experiments/dlstreamer:/root/dlstreamer \
--w /root/dlstreamer intel/dlstreamer:2025.1.2-ubuntu22
+-w /root/dlstreamer intel/dlstreamer:2025.2.0-ubuntu22
 
 
 ```
@@ -42,12 +41,11 @@ sudo docker run -itd \
 
 ```shell
 
-sudo docker start intelai-platform-experiments_dlstreamer-2025.1.2
-sudo docker exec -it intelai-platform-experiments_dlstreamer-2025.1.2 /bin/bash
+sudo docker start intelai-platform-experiments_dlstreamer-2025.2.0
+sudo docker exec -it intelai-platform-experiments_dlstreamer-2025.2.0 /bin/bash
 
 apt update
 apt install -y wget unzip
-apt install -y numactl
 
 pip install ultralytics==8.3.222 -i https://mirrors.aliyun.com/pypi/simple
 
@@ -81,19 +79,9 @@ chmod +x gen_random_videos.sh
 ./gen_random_videos.sh
 
 ```
+
 # CPU and Memory affinity
 ```shell
-
-lscpu
-Architecture:                x86_64
-  CPU op-mode(s):            32-bit, 64-bit
-  Address sizes:             39 bits physical, 48 bits virtual
-  Byte Order:                Little Endian
-CPU(s):                      20
-  On-line CPU(s) list:       0-19
-Vendor ID:                   GenuineIntel
-  Model name:                13th Gen Intel(R) Core(TM) i9-13900HK
-    CPU family:              6
 
 numactl --hardware
 available: 1 nodes (0)
@@ -142,7 +130,7 @@ numactl --physcpubind=8-9 --membind=0 \
 numactl --physcpubind=10-11 --membind=0 \
 
 
-numactl --physcpubind=10-11 --membind=0 \
+numactl --physcpubind=0-1 --membind=0 \
 gst-launch-1.0 \
 filesrc location=/root/dlstreamer/perform_limit/datasets/mp4/1192116-sd_640_360_30fps/input/1192116-sd_640_360_30fps_8.mp4 ! \
 qtdemux ! h264parse ! vah264dec ! \
