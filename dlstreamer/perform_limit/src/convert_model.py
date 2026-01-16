@@ -4,7 +4,7 @@ import openvino as ov
 import shutil
 import os
 
-ROOT_PATH = Path("/root/dlstreamer/stream_batch_error")
+ROOT_PATH = Path("/root/dlstreamer/perform_limit")
 DET_MODEL_NAME = "yolo11n"
 DET_MODEL_PATH = ROOT_PATH / "models" / f"{DET_MODEL_NAME}.pt"
 
